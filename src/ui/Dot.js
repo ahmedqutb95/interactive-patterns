@@ -3,7 +3,8 @@ import Theme from "./Theme.js";
 export default class Dot {
 
     constructor(p) {
-        this.p = p;
+         this.p = p;
+         this.scale = 1;
     }
 
     draw(x, y) {
@@ -17,7 +18,7 @@ export default class Dot {
         p.circle(
             x,
             y,
-            Theme.radius.dot * 12
+            Theme.radius.dot * this.scale * 12
         );
 
         // Inner translucent fill
@@ -26,7 +27,7 @@ export default class Dot {
         p.circle(
             x,
             y,
-            Theme.radius.dot * 2
+            Theme.radius.dot * this.scale * 2
         );
 
         // Center dot
@@ -34,7 +35,7 @@ export default class Dot {
         p.circle(
             x,
             y,
-            Theme.radius.dot * 0.22
+            Theme.radius.dot * this.scale * 0.22
         );
 
     }

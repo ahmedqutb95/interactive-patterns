@@ -112,6 +112,33 @@ export default class Renderer {
         const x = (g.width - w) * 0.5;
         const y = (g.height - h) * 0.5;
 
+        if (this.camera.mirror) {
+            g.push();
+
+            g.translate(g.width, 0);
+            g.scale(-1, 1);
+
+            g.drawingContext.drawImage(
+                video,
+                x,
+                y,
+                w,
+                h
+            );
+
+            g.pop();
+        } else {
+
+            g.drawingContext.drawImage(
+                video,
+                x,
+                y,
+                w,
+                h
+            );
+
+        }
+
         g.drawingContext.drawImage(
             video,
             x,

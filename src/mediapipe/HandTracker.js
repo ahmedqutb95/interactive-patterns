@@ -9,6 +9,8 @@ export default class HandTracker {
 
         this.video = video;
         this.handLandmarker = null;
+        this.lastDetectionTime = 0;
+        this.targetFPS = 30;    
 
         console.log("HandTracker created");
 
@@ -31,9 +33,9 @@ export default class HandTracker {
                 },
                 runningMode: "VIDEO",
                 numHands: 2,
-                minHandDetectionConfidence: 0.8,
-                minHandPresenceConfidence: 0.8,
-                minTrackingConfidence: 0.8
+                minHandDetectionConfidence: 0.6,
+                minHandPresenceConfidence: 0.5,
+                minTrackingConfidence: 0.7
             }
         );
 
@@ -41,16 +43,24 @@ export default class HandTracker {
 
     }
 
-    update() {
+   update() {
 
         if (!this.handLandmarker) return;
 
-        const results = this.handLandmarker.detectForVideo(
+        const now = performance.now();
+
+        if (now - this.lastDetectionTime < (1000 / this.targetFPS)) {
+            return this.lastResults;
+        }
+
+        this.lastDetectionTime = now;
+
+        this.lastResults = this.handLandmarker.detectForVideo(
             this.video,
-            performance.now()
+            now
         );
 
-        return results;
+        return this.lastResults;
 
     }
 

@@ -5,6 +5,7 @@ export default class Camera {
         this.video.autoplay = true;
         this.video.playsInline = true;
         this.video.muted = true;
+        this.mirror = true;
     }
 
     async start() {
