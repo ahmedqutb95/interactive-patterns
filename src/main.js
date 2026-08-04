@@ -1,9 +1,6 @@
-import './styles/global.css';
-import p5 from 'p5';
-import sketch from './sketch.js';
+import "./styles/global.css";
 
-const app = document.createElement('div');
-app.id = 'app';
-document.body.appendChild(app);
+import p5 from "p5";
+import sketch from "./sketch.js";
 
-new p5(sketch, app);
+new p5(sketch);

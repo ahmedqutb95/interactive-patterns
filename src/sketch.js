@@ -1,20 +1,40 @@
 import Renderer from "./rendering/Renderer.js";
+console.log("Sketch loaded");
+
 
 export default function sketch(p) {
 
     let renderer;
 
     p.setup = () => {
-        p.createCanvas(p.windowWidth, p.windowHeight);
+        console.log("Setup running");
+
+        p.createCanvas(
+            p.windowWidth,
+            p.windowHeight
+        );
+
         renderer = new Renderer(p);
+
     };
 
     p.draw = () => {
+
         renderer.render();
+        
+
     };
 
-    p.windowResized = () => {
-        p.resizeCanvas(p.windowWidth, p.windowHeight);
+ p.windowResized = () => {
+
+    p.resizeCanvas(
+        window.innerWidth,
+        window.innerHeight
+    );
+
+
+        renderer.resize();
+
     };
 
 }
