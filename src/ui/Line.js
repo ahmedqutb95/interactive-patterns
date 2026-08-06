@@ -1,24 +1,25 @@
-import Theme from "./Theme.js";
+import Theme from "../config/Theme.js";
 
 export default class Line {
 
     constructor(p) {
         this.p = p;
+        this.g = p;
     }
 
-    draw(x1, y1, x2, y2) {
+    draw(from, to) {
 
-        const p = this.p;
+        const g = this.g;
 
-        p.stroke(Theme.colors.primary);
-        p.strokeWeight(Theme.stroke.normal);
-        p.noFill();
+        g.stroke(Theme.colors.primary);
+        g.strokeWeight(Theme.stroke.normal);
+        g.noFill();
 
-        p.line(
-            x1,
-            y1,
-            x2,
-            y2
+        g.line(
+            from.x,
+            from.y,
+            to.x,
+            to.y
         );
 
     }

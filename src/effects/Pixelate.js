@@ -1,32 +1,61 @@
-export default class Pixelate {
+import Effect from "./Effect.js";
 
-    constructor(p, size = 12) {
-        this.p = p;
-        this.size = size;
+export default class Pixelate extends Effect {
+
+    constructor(p) {
+
+        super(p);
+
+        this.resolution = 80;
+        this.targetResolution = 80;
+
+        this.buffer = p.createGraphics(
+            this.resolution,
+            Math.round(
+                this.resolution *
+                p.height /
+                p.width
+            )
+        );
+
+        this.buffer.noSmooth();
+
     }
 
-    draw(video) {
+    apply(source) {
 
-        const p = this.p;
+        // Recreate buffer if resolution changed
+        if (this.buffer.width !== this.resolution) {
 
-        p.noSmooth();
+            this.buffer = this.p.createGraphics(
+                this.resolution,
+                Math.round(
+                    this.resolution *
+                    this.p.height /
+                    this.p.width
+                )
+            );
 
-        p.image(
-            video,
+            this.buffer.noSmooth();
+
+        }
+
+        this.buffer.clear();
+
+        this.buffer.image(
+            source,
             0,
             0,
-            Math.ceil(p.width / this.size),
-            Math.ceil(p.height / this.size)
+            this.buffer.width,
+            this.buffer.height
         );
 
-        p.image(
-            p.get(),
-            0,
-            0,
-            p.width,
-            p.height
-        );
+        return this.buffer;
 
+    }
+
+    update(state) {
+        this.resolution = state.effects.pixelate.resolution;
     }
 
 }

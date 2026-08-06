@@ -18,6 +18,10 @@ export default class Camera {
         await this.video.play();
     }
 
+    update() {
+        return this.video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA;
+    }
+
     getVideo() {
         return this.video;
     }

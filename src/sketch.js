@@ -14,6 +14,8 @@ export default function sketch(p) {
             p.windowHeight
         );
 
+        p.pixelDensity(1);
+
         renderer = new Renderer(p);
 
     };
