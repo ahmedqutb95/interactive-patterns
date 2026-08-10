@@ -10,7 +10,11 @@ export default class Camera {
 
     async start() {
         const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
+            video: {
+                width: { ideal: 1920 },
+                height: { ideal: 1080 },
+                facingMode: "user"
+            },
             audio: false,
         });
 

@@ -1,3 +1,5 @@
+import { getCoverRect } from "../utils/Helpers.js";
+
 const emptyHand = () => ({
     visible: false,
     thumb: null,
@@ -12,7 +14,8 @@ const emptyHand = () => ({
     rotationRadius: 0,
     rotationLabel: "0°",
     rotationLabelPosition: null,
-    velocity: 0
+    velocity: 0,
+    scale: 1
 });
 
 /** Computes the hand portion of the shared State snapshot. */
@@ -27,12 +30,20 @@ export default class HandState {
         this.rotationResetArmed = new Map();
     }
 
-    update(results, elapsedSeconds, mirrored) {
+    update(results, elapsedSeconds, mirrored, video) {
         const hands = { left: emptyHand(), right: emptyHand() };
 
-        results?.landmarks?.forEach((landmarks, index) => {
+        if (!results?.landmarks?.length || !video?.videoWidth) return hands;
+
+        const coverRect = {
+            ...getCoverRect(video.videoWidth, video.videoHeight, this.p.width, this.p.height),
+            videoWidth: video.videoWidth,
+            videoHeight: video.videoHeight
+        };
+
+        results.landmarks.forEach((landmarks, index) => {
             const name = this.getHandName(results, index);
-            hands[name] = this.createHand(name, landmarks, elapsedSeconds, mirrored);
+            hands[name] = this.createHand(name, landmarks, elapsedSeconds, mirrored, coverRect);
         });
 
         return hands;
@@ -43,10 +54,10 @@ export default class HandState {
         return label === "left" ? "left" : "right";
     }
 
-    createHand(name, landmarks, elapsedSeconds, mirrored) {
+    createHand(name, landmarks, elapsedSeconds, mirrored, coverRect) {
         const points = this.smooth(name, landmarks);
-        const thumb = this.toDisplayPoint(points[4], mirrored);
-        const index = this.toDisplayPoint(points[8], mirrored);
+        const thumb = this.toDisplayPoint(points[4], mirrored, coverRect);
+        const index = this.toDisplayPoint(points[8], mirrored, coverRect);
         const center = {
             x: (thumb.x + index.x) * 0.5,
             y: (thumb.y + index.y) * 0.5
@@ -74,6 +85,13 @@ export default class HandState {
         const velocity = previous
             ? this.p.dist(center.x, center.y, previous.x, previous.y) / elapsedSeconds
             : 0;
+        const span = this.p.dist(points[0].x, points[0].y, points[9].x, points[9].y);
+        const scale = this.p.map(span,
+            this.settings.depth.minimumSpan,
+            this.settings.depth.maximumSpan,
+            this.settings.depth.scale.minimum,
+            this.settings.depth.scale.maximum,
+            true);
 
         this.previousCenters.set(name, center);
 
@@ -96,7 +114,8 @@ export default class HandState {
                 x: center.x,
                 y: center.y + rotationRadius + 18
             },
-            velocity
+            velocity,
+            scale
         };
     }
 
@@ -158,12 +177,17 @@ export default class HandState {
             : Math.max(0, degrees);
     }
 
-    toDisplayPoint(point, mirrored) {
+    /** Maps a normalized landmark (0-1 across the full video frame) into canvas
+     *  pixel space, accounting for the same "cover" crop the video is drawn with. */
+    toDisplayPoint(point, mirrored, coverRect) {
+        const nx = (point.x * coverRect.videoWidth - coverRect.sx) / coverRect.sWidth;
+        const ny = (point.y * coverRect.videoHeight - coverRect.sy) / coverRect.sHeight;
+        const x = nx * this.p.width;
+        const y = ny * this.p.height;
+
         return {
-            x: mirrored
-                ? this.p.width - point.x * this.p.width
-                : point.x * this.p.width,
-            y: point.y * this.p.height
+            x: mirrored ? this.p.width - x : x,
+            y
         };
     }
 }

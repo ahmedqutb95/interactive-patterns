@@ -9,11 +9,7 @@ export default function sketch(p) {
     p.setup = () => {
         console.log("Setup running");
 
-        p.createCanvas(
-            p.windowWidth,
-            p.windowHeight
-        );
-
+        p.createCanvas(p.windowWidth, p.windowHeight);
         p.pixelDensity(1);
 
         renderer = new Renderer(p);
@@ -23,18 +19,12 @@ export default function sketch(p) {
     p.draw = () => {
 
         renderer.render();
-        
 
     };
 
- p.windowResized = () => {
+    p.windowResized = () => {
 
-    p.resizeCanvas(
-        window.innerWidth,
-        window.innerHeight
-    );
-
-
+        p.resizeCanvas(p.windowWidth, p.windowHeight);
         renderer.resize();
 
     };

@@ -22,9 +22,9 @@ export default class HUD {
         const leftHand = state.hand.left;
         const rightHand = state.hand.right;
 
+        this.polygonShape.draw(leftHand, rightHand, state.effects.pixelate.resolution);
         this.drawHand(leftHand);
         this.drawHand(rightHand);
-        this.polygonShape.draw(leftHand, rightHand);
     }
 
     drawHand(hand) {
@@ -32,8 +32,8 @@ export default class HUD {
         this.rotation.draw(hand);
         this.textInfo.draw(hand);
         this.line.draw(hand.thumb, hand.index);
-        this.dot.draw(hand.thumb);
-        this.dot.draw(hand.index);
+        this.dot.draw(hand.thumb, hand.scale);
+        this.dot.draw(hand.index, hand.scale);
         this.distanceMeter.draw(hand);
     }
 }

@@ -18,11 +18,16 @@ body {
 
 
 
-#app{
-    width:100vw;
-    height:100vh;
+#app {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
 }
 
-canvas{
-    display:block;
+canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
 }

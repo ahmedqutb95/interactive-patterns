@@ -5,15 +5,14 @@ export default class Dot {
     constructor(p) {
         this.p = p;
         this.g = p;
-        this.scale = 1;
     }
 
-    draw(point) {
+    draw(point, scale = 1) {
 
         const g = this.g;
         const { x, y } = point;
 
-        this.drawRotatingRing(g, x, y);
+        this.drawRotatingRing(g, x, y, scale);
 
         // Outer circle
         g.fill(0, 0, 0, 70);
@@ -22,16 +21,16 @@ export default class Dot {
         g.circle(
             x,
             y,
-            Theme.radius.dot * this.scale * 14
+            Theme.radius.dot * scale * 14
         );
 
         // Inner translucent fill
         g.noStroke();
-        g.fill(255, 255, 255, );
+        g.fill(255, 255, 255,);
         g.circle(
             x,
             y,
-            Theme.radius.dot * this.scale * 2
+            Theme.radius.dot * scale * 2
         );
 
         // Center dot
@@ -39,14 +38,14 @@ export default class Dot {
         g.circle(
             x,
             y,
-            Theme.radius.dot * this.scale * 0.22
+            Theme.radius.dot * scale * 0.22
         );
 
     }
 
-    drawRotatingRing(g, x, y) {
+    drawRotatingRing(g, x, y, scale) {
         const tickCount = 32;
-        const radius = Theme.radius.dot * this.scale * 9;
+        const radius = Theme.radius.dot * scale * 9;
 
         g.push();
         g.translate(x, y);

@@ -28,7 +28,8 @@ export default class Renderer {
         this.state.update(
             this.tracker.results,
             this.camera.mirror,
-            this.tracker.hasNewResults
+            this.tracker.hasNewResults,
+            this.camera.getVideo()
         );
         //this.effects.update(this.state);
         this.scene.draw(this.camera.getVideo(), this.state, this.camera.mirror);

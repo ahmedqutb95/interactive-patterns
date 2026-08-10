@@ -18,7 +18,6 @@ const freezeFrame = (frame) => Object.freeze({
         left: freezeHand(frame.hand.left),
         right: freezeHand(frame.hand.right)
     }),
-    overlay: Object.freeze({ ...frame.overlay }),
     effects: Object.freeze({
         pixelate: Object.freeze({ ...frame.effects.pixelate })
     }),
@@ -40,29 +39,22 @@ export default class State {
         this.lastUpdateTime = performance.now();
         this.snapshot = freezeFrame({
             hand: this.handState.update(),
-            overlay: { hue: 220, opacity: 100 },
             effects: { pixelate: { resolution: 80 } },
             face: this.faceState.update(),
             pose: this.poseState.update()
         });
     }
 
-    update(results, mirrored = false, hasNewResults = true) {
+    update(results, mirrored = false, hasNewResults = true, video = null) {
         if (!hasNewResults) return;
 
         const now = performance.now();
         const elapsedSeconds = Math.max((now - this.lastUpdateTime) / 1000, 0.001);
         this.lastUpdateTime = now;
-        const hands = this.handState.update(results, elapsedSeconds, mirrored);
+        const hands = this.handState.update(results, elapsedSeconds, mirrored, video);
 
         this.snapshot = freezeFrame({
             hand: hands,
-            // overlay: {
-            //     opacity: this.p.map(hands.left.pinch, 0, 1,
-            //         HandSignals.overlay.opacity.minimum, HandSignals.overlay.opacity.maximum),
-            //     hue: this.p.map(hands.right.pinch, 0, 1,
-            //         HandSignals.overlay.hue.minimum, HandSignals.overlay.hue.maximum)
-            // },
             effects: {
                 pixelate: {
                     resolution: this.p.round(this.p.map(
@@ -80,10 +72,6 @@ export default class State {
 
     get hand() {
         return this.snapshot.hand;
-    }
-
-    get overlay() {
-        return this.snapshot.overlay;
     }
 
     get effects() {

@@ -13,10 +13,6 @@ export const HandSignals = Object.freeze({
         minimumDistance: 20,
         maximumDistance: 250
     }),
-    overlay: Object.freeze({
-        opacity: Object.freeze({ minimum: 20, maximum: 220 }),
-        hue: Object.freeze({ minimum: 180, maximum: 360 })
-    }),
     pixelate: Object.freeze({
         resolution: Object.freeze({ minimum: 20, maximum: 160 })
     }),
@@ -24,5 +20,11 @@ export const HandSignals = Object.freeze({
         closedPinch: 0.08,
         openPinch: 0.2,
         minimumRadius: 64
+    }),
+    depth: Object.freeze({
+        // wrist-to-middle-MCP span in normalized landmark space (resolution independent)
+        minimumSpan: 0.06,
+        maximumSpan: 0.22,
+        scale: Object.freeze({ minimum: 0.6, maximum: 1.8 })
     })
 });
